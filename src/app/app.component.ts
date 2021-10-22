@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import * as Editor from './ckeditor5Final/build/ckeditor';
+import * as Editor from './ckeditor5/build/ckeditor';
 
 @Component({
   selector: 'app-root',
@@ -14,19 +14,20 @@ export class AppComponent {
     toolbar: {
       items: [
         'heading', '|',
-        'fontfamily', 'fontsize',
-        'alignment',
-        'fontColor', 'fontBackgroundColor', '|',
+        'fontfamily', 'fontsize', 'alignment', 'fontColor', 'fontBackgroundColor', 'highlight', 'removeFormat', '|',
         'bold', 'italic', 'strikethrough', 'underline', 'subscript', 'superscript', '|',
         'link', '|',
         'outdent', 'indent', '|',
-        'bulletedList', '-', 'numberedList', 'todoList', '|',
+        'bulletedList', 'numberedList', 'todoList', '|',
         'code', 'codeBlock', '|',
         'insertTable', '|',
-        'imageUpload', 'blockQuote', '|',
-        'todoList'
-        ,
-        'undo', 'redo',
+        'imageUpload', 'mediaEmbed', 'blockQuote', '|',
+        'todoList', '|',
+        'pageBreak', '|',
+        'horizontalLine', 'findAndReplace', '|', 
+        'undo', 'redo', '|', 
+        'sourceEditing', 'specialCharacters', 'restrictedEditingException', '|',
+        'textPartLanguage'
       ],
       shouldNotGroupWhenFull: true,
 
@@ -71,14 +72,28 @@ export class AppComponent {
         'imageTextAlternative'
       ]
     },
-    // simpleUpload: {
-    //    The URL that the images are uploaded to.
-    uploadUrl: 'http://localhost:52536/api/Image/ImageUpload',
+    simpleUpload: {
+        // The URL that the images are uploaded to.
+        uploadUrl: 'http://example.com',
 
-    //   Enable the XMLHttpRequest.withCredentials property.
+        // Enable the XMLHttpRequest.withCredentials property.
+        withCredentials: true,
 
-    //},
+        // Headers sent along with the XMLHttpRequest to the upload server.
+        headers: {
+            'X-CSRF-TOKEN': 'CSRF-Token',
+            Authorization: 'Bearer <JSON Web Token>'
+        }
+    },
 
     language: 'en'
   };
+
+  
+
+  onReady(editor: any) {
+    if (editor.model.schema.isRegistered('image')) {
+      editor.model.schema.extend('image', { allowAttributes: 'blockIndent' });
+    }
+  }
 }

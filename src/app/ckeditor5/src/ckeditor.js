@@ -7,19 +7,13 @@ import Alignment from '@ckeditor/ckeditor5-alignment/src/alignment.js';
 import Autoformat from '@ckeditor/ckeditor5-autoformat/src/autoformat.js';
 import AutoImage from '@ckeditor/ckeditor5-image/src/autoimage.js';
 import AutoLink from '@ckeditor/ckeditor5-link/src/autolink.js';
+import Autosave from '@ckeditor/ckeditor5-autosave/src/autosave.js';
 import BlockQuote from '@ckeditor/ckeditor5-block-quote/src/blockquote.js';
 import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold.js';
-import CKFinder from '@ckeditor/ckeditor5-ckfinder/src/ckfinder.js';
-import CKFinderUploadAdapter from '@ckeditor/ckeditor5-adapter-ckfinder/src/uploadadapter.js';
 import CloudServices from '@ckeditor/ckeditor5-cloud-services/src/cloudservices.js';
 import Code from '@ckeditor/ckeditor5-basic-styles/src/code.js';
 import CodeBlock from '@ckeditor/ckeditor5-code-block/src/codeblock.js';
-import Comments from '@ckeditor/ckeditor5-comments/src/comments.js';
-import DataFilter from '@ckeditor/ckeditor5-html-support/src/datafilter.js';
-import DataSchema from '@ckeditor/ckeditor5-html-support/src/dataschema.js';
 import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials.js';
-import ExportPdf from '@ckeditor/ckeditor5-export-pdf/src/exportpdf.js';
-import ExportWord from '@ckeditor/ckeditor5-export-word/src/exportword.js';
 import FindAndReplace from '@ckeditor/ckeditor5-find-and-replace/src/findandreplace.js';
 import FontBackgroundColor from '@ckeditor/ckeditor5-font/src/fontbackgroundcolor.js';
 import FontColor from '@ckeditor/ckeditor5-font/src/fontcolor.js';
@@ -29,6 +23,7 @@ import GeneralHtmlSupport from '@ckeditor/ckeditor5-html-support/src/generalhtml
 import Heading from '@ckeditor/ckeditor5-heading/src/heading.js';
 import Highlight from '@ckeditor/ckeditor5-highlight/src/highlight.js';
 import HorizontalLine from '@ckeditor/ckeditor5-horizontal-line/src/horizontalline.js';
+import HtmlComment from '@ckeditor/ckeditor5-html-support/src/htmlcomment.js';
 import HtmlEmbed from '@ckeditor/ckeditor5-html-embed/src/htmlembed.js';
 import Image from '@ckeditor/ckeditor5-image/src/image.js';
 import ImageCaption from '@ckeditor/ckeditor5-image/src/imagecaption.js';
@@ -45,14 +40,15 @@ import LinkImage from '@ckeditor/ckeditor5-link/src/linkimage.js';
 import List from '@ckeditor/ckeditor5-list/src/list.js';
 import ListStyle from '@ckeditor/ckeditor5-list/src/liststyle.js';
 import Markdown from '@ckeditor/ckeditor5-markdown-gfm/src/markdown.js';
-import MathType from '@wiris/mathtype-ckeditor5';
 import MediaEmbed from '@ckeditor/ckeditor5-media-embed/src/mediaembed.js';
 import MediaEmbedToolbar from '@ckeditor/ckeditor5-media-embed/src/mediaembedtoolbar.js';
 import Mention from '@ckeditor/ckeditor5-mention/src/mention.js';
 import PageBreak from '@ckeditor/ckeditor5-page-break/src/pagebreak.js';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph.js';
 import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefromoffice.js';
-import RevisionHistory from '@ckeditor/ckeditor5-revision-history/src/revisionhistory.js';
+import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat.js';
+import SimpleUploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/simpleuploadadapter.js';
+import SourceEditing from '@ckeditor/ckeditor5-source-editing/src/sourceediting.js';
 import SpecialCharacters from '@ckeditor/ckeditor5-special-characters/src/specialcharacters.js';
 import SpecialCharactersArrows from '@ckeditor/ckeditor5-special-characters/src/specialcharactersarrows.js';
 import SpecialCharactersCurrency from '@ckeditor/ckeditor5-special-characters/src/specialcharacterscurrency.js';
@@ -73,54 +69,8 @@ import TextPartLanguage from '@ckeditor/ckeditor5-language/src/textpartlanguage.
 import TextTransformation from '@ckeditor/ckeditor5-typing/src/texttransformation.js';
 import Title from '@ckeditor/ckeditor5-heading/src/title.js';
 import TodoList from '@ckeditor/ckeditor5-list/src/todolist';
-import TrackChanges from '@ckeditor/ckeditor5-track-changes/src/trackchanges.js';
 import Underline from '@ckeditor/ckeditor5-basic-styles/src/underline.js';
 import WordCount from '@ckeditor/ckeditor5-word-count/src/wordcount.js';
-import WProofreader from '@webspellchecker/wproofreader-ckeditor5/src/wproofreader.js';
-import EditorWatchdog from '@ckeditor/ckeditor5-watchdog/src/editorwatchdog.js';
-
-class RevisionHistoryAdapter {
-	static get requires() {
-		return [ 'RevisionHistory' ];
-	}
-
-	constructor( editor ) {
-		this.editor = editor;
-	}
-
-	init() {
-		const editor = this.editor;
-		const revisionHistory = editor.plugins.get( 'RevisionHistory' );
-		const revisionsData = [];
-
-		revisionHistory.adapter = {
-			getRevisions: async () => {
-				const revisionsNoData = revisionsData.map( revisionData => {
-					const filtered = { ...revisionData };
-
-					delete filtered.data;
-
-					return filtered;
-				} );
-
-				return revisionsNoData;
-			},
-			getRevision: async ( { revisionId } ) => {
-				return revisionsData.find( data => data.id == revisionId );
-			},
-			updateRevision: async revisionData => {
-				const revision = revisionsData.find( data => data.id == revisionData.id );
-
-				for ( const i in revisionData ) {
-					revision[ i ] = revisionData[ i ];
-				}
-			},
-			addRevision: async revisionData => {
-				revisionsData.push( revisionData );
-			}
-		};
-	}
-}
 
 class Editor extends ClassicEditor {}
 
@@ -130,19 +80,13 @@ Editor.builtinPlugins = [
 	Autoformat,
 	AutoImage,
 	AutoLink,
+	Autosave,
 	BlockQuote,
 	Bold,
-	CKFinder,
-	CKFinderUploadAdapter,
 	CloudServices,
 	Code,
 	CodeBlock,
-	Comments,
-	DataFilter,
-	DataSchema,
 	Essentials,
-	ExportPdf,
-	ExportWord,
 	FindAndReplace,
 	FontBackgroundColor,
 	FontColor,
@@ -152,6 +96,7 @@ Editor.builtinPlugins = [
 	Heading,
 	Highlight,
 	HorizontalLine,
+	HtmlComment,
 	HtmlEmbed,
 	Image,
 	ImageCaption,
@@ -168,14 +113,15 @@ Editor.builtinPlugins = [
 	List,
 	ListStyle,
 	Markdown,
-	MathType,
 	MediaEmbed,
 	MediaEmbedToolbar,
 	Mention,
 	PageBreak,
 	Paragraph,
 	PasteFromOffice,
-	RevisionHistory,
+	RemoveFormat,
+	SimpleUploadAdapter,
+	SourceEditing,
 	SpecialCharacters,
 	SpecialCharactersArrows,
 	SpecialCharactersCurrency,
@@ -196,11 +142,8 @@ Editor.builtinPlugins = [
 	TextTransformation,
 	Title,
 	TodoList,
-	TrackChanges,
 	Underline,
-	WordCount,
-	WProofreader,
-	RevisionHistoryAdapter
+	WordCount
 ];
 
-export default { Editor, EditorWatchdog };
+export default Editor;

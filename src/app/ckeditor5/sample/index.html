@@ -11,7 +11,7 @@
 		<link rel="icon" type="image/png" href="https://c.cksource.com/a/1/logos/ckeditor5.png">
 		<link rel="stylesheet" type="text/css" href="styles.css">
 	</head>
-	<body data-editor="ClassicEditor" data-collaboration="false" data-revision-history="true">
+	<body data-editor="ClassicEditor" data-collaboration="false" data-revision-history="false">
 		<header>
 			<div class="centered">
 				<h1><a href="https://ckeditor.com/ckeditor-5/" target="_blank" rel="noopener noreferrer"><img src="https://c.cksource.com/a/1/logos/ckeditor5.svg" alt="CKEditor 5 logo">CKEditor 5</a></h1>
@@ -90,13 +90,6 @@
 								<strong>the culture</strong> of languages varies substantially and the language a person speaks is an essential element of daily life.
 							</p>
 						</div>
-						<div class="sidebar"></div>
-					</div>
-					<div class="revision-viewer-container">
-						<div class="editor-container">
-							<div class="revision-viewer-editor"></div>
-							<div class="revision-viewer-sidebar"></div>
-						</div>
 					</div>
 				</div></div>
 			</div>
@@ -111,33 +104,7 @@
 			</p>
 		</footer>
 		<script src="../build/ckeditor.js"></script>
-		<script>
-			const watchdog = new CKSource.EditorWatchdog();
-			
-			window.watchdog = watchdog;
-			
-			watchdog.setCreator( ( element, config ) => {
-				return CKSource.Editor
-					.create( element, config )
-					.then( editor => {
-						
-						
-						
-			
-						return editor;
-					} )
-			} );
-			
-			watchdog.setDestructor( editor => {
-				
-				
-			
-				return editor.destroy();
-			} );
-			
-			watchdog.on( 'error', handleError );
-			
-			watchdog
+		<script>ClassicEditor
 				.create( document.querySelector( '.editor' ), {
 					
 				toolbar: {
@@ -159,33 +126,34 @@
 						'mediaEmbed',
 						'undo',
 						'redo',
-						'alignment',
 						'code',
 						'codeBlock',
+						'alignment',
 						'findAndReplace',
 						'fontBackgroundColor',
 						'fontColor',
 						'fontFamily',
-						'highlight',
 						'fontSize',
+						'highlight',
 						'horizontalLine',
+						'htmlEmbed',
 						'imageInsert',
-						'underline',
-						'strikethrough',
+						'pageBreak',
+						'removeFormat',
+						'sourceEditing',
 						'specialCharacters',
 						'restrictedEditingException',
+						'strikethrough',
 						'subscript',
 						'superscript',
+						'underline',
 						'todoList',
-						'textPartLanguage',
-						'pageBreak',
-						'htmlEmbed'
+						'textPartLanguage'
 					]
 				},
 				language: 'en',
 				image: {
 					toolbar: [
-						'comment',
 						'imageTextAlternative',
 						'imageStyle:inline',
 						'imageStyle:block',
@@ -200,59 +168,26 @@
 						'mergeTableCells',
 						'tableCellProperties',
 						'tableProperties'
-					],
-					tableToolbar: [
-						'comment'
 					]
 				},
-				extraPlugins: [
-	// Learn more about users at https://ckeditor.com/docs/ckeditor5/latest/features/collaboration/users.html.
-
-class UsersInit {
-	static get requires() {
-		return [ 'Users' ];
-	}
-
-	constructor( editor ) {
-		this.editor = editor;
-	}
-
-	init() {
-		const users = this.editor.plugins.get( 'Users' );
-
-		users.addUser( {
-			id: 'u1'
-		} );
-
-		users.defineMe( 'u1' );
-	}
-}
-
-],
 					licenseKey: '',
-					sidebar: {
-				container: document.querySelector( '.sidebar' )
-			},
-					wproofreader: {
-				serviceId: window.prompt( 'Provide serviceId for WProofreader plugin:' ),
-				srcUrl: 'https://svc.webspellchecker.net/spellcheck31/wscbundle/wscbundle.js'
-			},
-					revisionHistory: {
-					editorContainer: document.querySelector( '.editor-container' ),
-					viewerContainer: document.querySelector( '.revision-viewer-container' ),
-					viewerEditorElement: document.querySelector( '.revision-viewer-editor' ),
-					viewerSidebarContainer: document.querySelector( '.revision-viewer-sidebar' )
-			},
+					
+					
+					
 				} )
-				.catch( handleError );
+				.then( editor => {
+					window.editor = editor;
 			
-			function handleError( error ) {
-				console.error( 'Oops, something went wrong!' );
-				console.error( 'Please, report the following error on https://github.com/ckeditor/ckeditor5/issues with the build id and the error stack trace:' );
-				console.warn( 'Build id: m8mg69kvyspr-6d0kk3nqgow6' );
-				console.error( error );
-			}
-			
+					
+					
+					
+				} )
+				.catch( error => {
+					console.error( 'Oops, something went wrong!' );
+					console.error( 'Please, report the following error on https://github.com/ckeditor/ckeditor5/issues with the build id and the error stack trace:' );
+					console.warn( 'Build id: ywsxc02hx9aa-6nubpaz70q3' );
+					console.error( error );
+				} );
 		</script>
 	</body>
 </html>
